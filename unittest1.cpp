@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "CppUnitTest.h"
-#include "../MemoryAllocator/MemoryAllocator.h"
-#include "../MemoryAllocator/MemoryAllocator.cpp"
+#include "../../MemoryAllocator/stdafx.h"
+#include "../../MemoryAllocator/CppUnitTest.h"
+#include "../../MemoryAllocator/MemoryAllocator.h"
+#include "../../MemoryAllocator/MemoryAllocator.cpp"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 BEGIN_TEST_MODULE_ATTRIBUTE()

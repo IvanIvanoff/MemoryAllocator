@@ -9,6 +9,7 @@
 @version 1.0
 
 */
+#include <cstdint>
 struct allocated_block;
 struct free_header;
 
@@ -18,13 +19,13 @@ enum thrw {
 };
 
 
-/*! Memory allocator is a custom and simple memory allocator. Given a size in megabytes it 
+/*! Memory allocator is a custom and simple memory allocator. Given a size in bytes it 
     allocates, frees and maintains the memory.
  */
 class MemoryAllocator
 {
 public:
-	MemoryAllocator(int = 10);							//!< Creates new allocator with the given size in megabytes
+	MemoryAllocator(int64_t = 4 * 1024);				//!< Creates new allocator with the given size in megabytes
 	~MemoryAllocator();									//!< Destroys and frees the memory
 	MemoryAllocator(const MemoryAllocator&) = delete;	//!< Cannot use copy constructor
 	MemoryAllocator(MemoryAllocator&&) = delete;		//!< Cannot use move constructor
@@ -34,7 +35,7 @@ public:
 	char* malloc(size_t, thrw = DO_THROW);				//!< Allocates size bytes and returs pointer to them
 	allocated_block* find_fit(size_t);					//!< Find where to allocate the 
 	void free(char*);									//!< Frees the memory pBlocks points to		
-	void remove_free_header(free_header*)const;				//!< Removes a free header from the free list
+	void remove_free_header(free_header*);			//!< Removes a free header from the free list
 	int count_in_flist() const;							//!< Counts the headers in the free list
 private:
 	bool flist_owns(const void*) const;					//!< Checks if pBlocks is pointer owned by the MA
