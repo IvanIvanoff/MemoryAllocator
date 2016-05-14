@@ -72,7 +72,7 @@ MemoryAllocator::~MemoryAllocator()
 	//Do not have to delete anything else
 	//Only heap_ has been allocated with operator new and thus needs to be freed
 	if (heap_)
-		delete heap_;
+		delete[] heap_;
 }
 
 /*	Allocates on the heap size bytes of memory and returns pointer to them
