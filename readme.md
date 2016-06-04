@@ -1,6 +1,8 @@
-## C++ Memory Manager
+TODO: Rewrite the readme
+## C++ Memory Manager	
 
-Начин на работа:
-1. Включване чрез добавяне не хедъра "MemoryManager.h"
-2. Инициализиране на Memory Manager с параметър броя байтове, които той ще управлява.
-3. Използване на функциите malloc и free за заделяне и освобождаване на памет.
+**How to use it:**
+> 1. Include the header: #include "~path/MemoryManager.h"
+
+
+Example:
