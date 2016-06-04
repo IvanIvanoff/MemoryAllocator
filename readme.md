@@ -41,6 +41,7 @@ double* dArray = (double*)myManager.malloc( sizeof(double) * 5000, NO_THROW);
 ```
 
 * Use the **myManager.free(ptr)** to free the memory of ptr returned by malloc
+
 > The free(ptr) method takes a single parameter pointer returned by *malloc(size)* cast back to char* or NULL/nullptr. If other argument is passed the behaviour is undefined.
 ```C++
 myManager.free(ptr);
