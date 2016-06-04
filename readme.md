@@ -7,7 +7,14 @@ TODO: Rewrite the readme
  #include "~path/MemoryManager.h"
 ```
 * Create an object of the MemoryManager class using one of the constructors of the class
-> **MemoryManager myManager(10*1024)** The constructor of MemoryManager takes 0 or 1 parameters - the size of the data pool in bytes. By default it is 4KB.
+```C++
+MemoryManager myManager(size);
+```
+Constructor with one parameter size creates new object with *size bytes of memory
+```C++
+MemoryManager myOtherManager();
+```
+The default constructors creates new object with 4KB memory
 * Use the **myManager.malloc(size)** method to allocate size bytes of memory
 > **malloc(size)** returns *char* * so make sure to cast it to whatever you want to use
 * Use the **myManager.free(ptr)** to free the memory of ptr returned by malloc
