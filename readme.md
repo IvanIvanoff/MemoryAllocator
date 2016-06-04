@@ -50,6 +50,8 @@ myManager.free((char*)numArray); //OK
 char* x;
 myManager.free(x); //Undefined behaviour
 ```
+
+
 **Example:**
 ```C++
 #include <iostream>
