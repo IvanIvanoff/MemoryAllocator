@@ -1,4 +1,5 @@
 TODO: Rewrite the readme
+NOTE: This is the battlefield where I'm experimenting with formatting readme files
 ## C++ Memory Manager	
 
 **How to use it:**
