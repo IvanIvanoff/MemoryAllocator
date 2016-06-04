@@ -3,7 +3,9 @@ TODO: Rewrite the readme
 
 **How to use it:**
 * Include the header
->#include "~path/MemoryManager.h"
+```C++
+ #include "~path/MemoryManager.h"
+```
 * Create an object of the MemoryManager class using one of the constructors of the class
 > **MemoryManager myManager(10*1024)** The constructor of MemoryManager takes 0 or 1 parameters - the size of the data pool in bytes. By default it is 4KB.
 * Use the **myManager.malloc(size)** method to allocate size bytes of memory
