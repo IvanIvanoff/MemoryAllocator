@@ -1,12 +1,19 @@
-#include "../../MemoryAllocator/stdafx.h"
-#include "../../MemoryAllocator/CppUnitTest.h"
-#include "../../MemoryAllocator/MemoryAllocator.h"
-#include "../../MemoryAllocator/MemoryAllocator.cpp"
+#include "stdafx.h"
+#include "CppUnitTest.h"
+#include "../../../MemoryManager/MemoryManager.h"
+#include "../../../MemoryManager/MemoryManager.cpp"
+#include "../../../MemoryManager/STLcustomalloc.h"
+
+#include <vector>
+#include <map>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 BEGIN_TEST_MODULE_ATTRIBUTE()
-	TEST_MODULE_ATTRIBUTE(L"Project", L"UnitTests")
-	TEST_MODULE_ATTRIBUTE(L"Date", L"24/01/2016")
+TEST_MODULE_ATTRIBUTE(L"Project", L"UnitTests")
+TEST_MODULE_ATTRIBUTE(L"Date", L"03/07/2016")
 END_TEST_MODULE_ATTRIBUTE()
 
 TEST_MODULE_INITIALIZE(ModuleInitialize)
@@ -20,12 +27,13 @@ TEST_MODULE_CLEANUP(ModuleCleanup)
 }
 
 
-namespace Test_MemoryAllocator
-{		
+
+namespace Test_Memorymanager
+{
 	TEST_CLASS(Test_MA)
 	{
 	public:
-		
+
 		Test_MA()
 		{
 			Logger::WriteMessage("Entering TestMA::TestMA()");
@@ -39,7 +47,7 @@ namespace Test_MemoryAllocator
 		TEST_METHOD(TestMalloc)
 		{
 			Logger::WriteMessage("Testing TestMalloc()");
-			MemoryAllocator m;
+			MemoryManager m(10 * 1024 * 1024);
 			int* x = (int*)m.malloc(sizeof(int) * 20);
 
 		}
@@ -47,7 +55,7 @@ namespace Test_MemoryAllocator
 		TEST_METHOD(TestMallocThrow)
 		{
 			Logger::WriteMessage("Testing TestMallocThrow()");
-			MemoryAllocator m(1);
+			MemoryManager m(1 * 1024 * 1024);
 			//Expect bad alloc exception
 			try {
 				int*x = (int*)m.malloc(SIZE_MAX / 2);
@@ -56,42 +64,42 @@ namespace Test_MemoryAllocator
 				//It's fine
 			}
 		}
-		
+
 		TEST_METHOD(TestMallocNoThrow)
 		{
 			Logger::WriteMessage("Testing TestMallocNoThrow()");
 
-			MemoryAllocator m(1);
+			MemoryManager m(1 * 1024 * 1024);
 			int* x = (int*)m.malloc(SIZE_MAX / 2, NO_THROW);
-		
+
 			//Why can't I Assert::AreEqual(x, nullptr) ???
 			Assert::AreEqual((int)x, 0);
 		}
 
-		TEST_METHOD(TestCreateAllocator)
+		TEST_METHOD(TestCreatemanager)
 		{
-			Logger::WriteMessage("Testing TestCreateAllocator()");
+			Logger::WriteMessage("Testing TestCreatemanager()");
 
-			size_t size = 10;
-			MemoryAllocator m(size);
+			size_t size = 10 * 1024 * 1024;
+			MemoryManager m(size);
 
 		}
 
-		TEST_METHOD(TestCreateAllocatorOverflow)
+		TEST_METHOD(TestCreatemanagerOverflow)
 		{
-			Logger::WriteMessage("Testing TestCreateAllocatorOverflow()");
+			Logger::WriteMessage("Testing TestCreatemanagerOverflow()");
 
 
 			//In the order of 2TB+
 			//It's not expected this test to be run on that kind of machine
 			try {
-				MemoryAllocator m(SIZE_MAX /2);
+				MemoryManager m(SIZE_MAX - 1);
 			}
 			catch (std::bad_alloc&)
 			{
 				//do nothing
 			}
-				
+
 		}
 
 		TEST_METHOD(TestStoreAndRetrieve)
@@ -99,8 +107,8 @@ namespace Test_MemoryAllocator
 			Logger::WriteMessage("Testing TestStoreAndRetrieve()");
 
 
-			size_t size = 10;
-			MemoryAllocator m(size);
+			size_t size = 10 * 1024 * 1024;
+			MemoryManager m(size);
 
 			int *pArr = (int*)m.malloc(sizeof(int));
 
@@ -113,8 +121,8 @@ namespace Test_MemoryAllocator
 		{
 			Logger::WriteMessage("Testing TestStoreAndDeleteManyTimes()");
 
-			size_t size = 100;
-			MemoryAllocator m(size);
+			size_t size = 100 * 1024 * 1024;
+			MemoryManager m(size);
 
 			for (int i = 0; i < 10'000; i++)
 			{
@@ -127,13 +135,13 @@ namespace Test_MemoryAllocator
 		{
 			Logger::WriteMessage("Testing TestFreeFunction()");
 
-			//Make allocator with 1mb of memory
-			MemoryAllocator m(1);
+			//Make manager with 1mb of memory
+			MemoryManager m(1 * 1024 * 1024);
 
 			//Allocate and free 1 million times
 			for (int i = 0; i < 1'000'000; i++)
 			{
-				int *pArr = (int*)m.malloc(sizeof(int));
+				int *pArr = (int*)m.malloc(sizeof(int) * rand() % 200 + 1);
 				m.free((char*)pArr);
 			}
 		}
@@ -141,14 +149,14 @@ namespace Test_MemoryAllocator
 		{
 			Logger::WriteMessage("Testing TestManyRetrieves()");
 
-			MemoryAllocator m;
+			MemoryManager m(10 * 1024 * 1024);
 
 			int* arr = new int[10000];
 			int** arr2 = new int*[10'000];
 			int tmp;
 			for (int i = 0; i < 10'000; i++)
 			{
-				tmp = rand() % 5000;
+				tmp = rand() % 5000 + 5;
 				arr[i] = tmp;
 				arr2[i] = (int*)m.malloc(sizeof(int));
 				*(arr2[i]) = tmp;
@@ -162,8 +170,8 @@ namespace Test_MemoryAllocator
 		TEST_METHOD(TestMyMallocSpeed)
 		{
 			Logger::WriteMessage("Testing TestMyMallocSpeed()");
-			
-			MemoryAllocator m(100);
+
+			MemoryManager m(200 * 1024 * 1024);
 
 			//With 1'000'000 it runs for 1 seconds on Intel m core 5Y71 
 			//(1.2GHz base frequency, up to 2.9GHz with turbo boost)
@@ -171,11 +179,11 @@ namespace Test_MemoryAllocator
 			// ~ 6 000 000 operations per second
 			for (int i = 0; i < 3'000'000; i++)
 			{
-				char* pArr = m.malloc(rand() % 500);
+				char* pArr = m.malloc(rand() % 500 + 1);
 				m.free(pArr);
-				char* pArr1 = m.malloc(rand() % 10);
+				char* pArr1 = m.malloc(rand() % 10 + 1);
 				m.free(pArr1);
-				char* pArr2 = m.malloc(500 + rand() % 500);
+				char* pArr2 = m.malloc(500 + rand() % 500 + 1);
 				m.free(pArr2);
 			}
 			char* pArr3 = (char*)m.malloc(500000);
@@ -184,7 +192,7 @@ namespace Test_MemoryAllocator
 		}
 		TEST_METHOD(TestMany)
 		{
-			MemoryAllocator m(3);
+			MemoryManager m(3 * 1024 * 1024);
 			int** arr = new int*[11'000];
 			for (int i = 0; i < 10'000; i++)
 				arr[i] = (int*)m.malloc(sizeof(int));
@@ -199,13 +207,13 @@ namespace Test_MemoryAllocator
 			Logger::WriteMessage("Testing TestSpeedStdMalloc()");
 
 			//Test the standard malloc function for comparison
-			for (int i = 0; i < 1'000'000; i++)
+			for (int i = 0; i < 3'000'000; i++)
 			{
-				char* pArr = (char*)malloc(rand() % 500);
+				char* pArr = (char*)malloc(rand() % 500 + 1);
 				free(pArr);
-				char* pArr1 = (char*)malloc(rand() % 10);
+				char* pArr1 = (char*)malloc(rand() % 10 + 1);
 				free(pArr1);
-				char* pArr2 = (char*)malloc(500 + rand() % 500);
+				char* pArr2 = (char*)malloc(500 + rand() % 500 + 1);
 				free(pArr2);
 			}
 		}
@@ -215,7 +223,7 @@ namespace Test_MemoryAllocator
 			Logger::WriteMessage("Testing TestSpeedStdNew()");
 
 			//Test the standard new function for comparison
-			for (int i = 0; i < 1'000'000; i++)
+			for (int i = 0; i < 3'000'000; i++)
 			{
 				char* pArr = new char[(rand() % 500)];
 				delete[] pArr;
@@ -230,7 +238,7 @@ namespace Test_MemoryAllocator
 		{
 			Logger::WriteMessage("Testing TestCoalescence()");
 
-			MemoryAllocator m(10);
+			MemoryManager m(11 * 1024 * 1024);
 			int const MAX = 500;
 			int** arr = new int*[MAX];
 			for (int i = 0; i < MAX; i++) {
@@ -252,7 +260,7 @@ namespace Test_MemoryAllocator
 		{
 			Logger::WriteMessage("Testing TestSplitting()");
 
-			MemoryAllocator m(1);
+			MemoryManager m(2 * 1024 * 1024);
 			//Almost 1 full megabyte
 			char* a = m.malloc(1 * 1024 * 1024 - 2000);
 			m.free(a);
@@ -264,5 +272,32 @@ namespace Test_MemoryAllocator
 			char* d = m.malloc(100000);
 			char* e = m.malloc(100000);
 		}
+
+
+		TEST_METHOD(STL_TestVector)
+		{
+			std::vector<int, STLcustomalloc<int> > v;
+			v.reserve(1000);
+			int arr[1000];
+
+			for (int i = 0; i < 500; i++) {
+				v.push_back(i);
+				arr[i] = i;
+			}
+			for (int i = 0; i < 50000; i++)
+			{
+				int p = rand() % 500;
+				int c = rand() % 1000;
+				v[p] = c;
+				arr[p] = c;
+			}
+
+			for (int i = 0; i < 500; i++)
+			{
+				Assert::AreEqual(v[i], arr[i]);
+			}
+		}
+		
+
 	};
 }
