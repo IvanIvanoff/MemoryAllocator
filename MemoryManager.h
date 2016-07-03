@@ -25,11 +25,11 @@ enum thrw {
 class MemoryManager
 {
 public:
-	MemoryManager(int64_t = 4 * 1024);				//!< Creates new manager with the given size in megabytes
+	MemoryManager(int64_t = 32 * 1024 * 1024);			//!< Creates new manager with the given size in megabytes
 	~MemoryManager();									//!< Destroys and frees the memory
-	MemoryManager(const MemoryManager&);	//!< Cannot use copy constructor
-	MemoryManager(MemoryManager&&) = delete;		//!< Cannot use move constructor
-	void operator=(const MemoryManager&) = delete;	//!< Cannot use copy asignment operator
+	MemoryManager(const MemoryManager&);				//!< Cannot use copy constructor
+	MemoryManager(MemoryManager&&) = delete;			//!< Cannot use move constructor
+	void operator=(const MemoryManager&) = delete;		//!< Cannot use copy asignment operator
 	void operator=(MemoryManager&&) = delete;			//!< Cannot use move assignment operator
 public:
 	char* malloc(size_t, thrw = DO_THROW);				//!< Allocates size bytes and returs pointer to them

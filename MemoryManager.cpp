@@ -44,8 +44,8 @@ const int SPLIT_ABOVE = 16 + 2 * ABLOCK_SIZE;
  */
 MemoryManager::MemoryManager(int64_t size)
 {
-	if (size <= 4 * 1024){
-		size = 4 * 1024;
+	if (size <= 4 * 1024 * 1024){
+		size = 4 * 1024 * 1024;
 		size = ALIGN(size / sizeof(alignment_type));
 	}
 

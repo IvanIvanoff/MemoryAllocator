@@ -4,6 +4,8 @@
 #include <cstddef>
 #include "MemoryManager.h"
 
+#define KB_64 (64*1024)
+
 #undef SHOW_ALLOC_MSG
 
 
@@ -70,13 +72,13 @@ void STLcustomalloc<T>::deallocate(T * p, std::size_t n)
 template<typename T>
 STLcustomalloc<T>::STLcustomalloc()
 {
-	m = new MemoryManager(sizeof(T) * 1024 * 4);
+	m = new MemoryManager();
 }
 
 template<typename T>
 STLcustomalloc<T>::STLcustomalloc(std::size_t n)
 {
-	m = new MemoryManager(n*sizeof(T));
+	m = new MemoryManager(n*sizeof(T) + KB_64);
 }
 
 #endif //!__STL_CUSTOM_ALLOCATOR_H__

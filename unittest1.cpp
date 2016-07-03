@@ -274,7 +274,7 @@ namespace Test_Memorymanager
 		}
 
 
-		TEST_METHOD(STL_TestVector)
+		TEST_METHOD(STL_TestVectorReserve)
 		{
 			std::vector<int, STLcustomalloc<int> > v;
 			v.reserve(1000);
@@ -297,7 +297,17 @@ namespace Test_Memorymanager
 				Assert::AreEqual(v[i], arr[i]);
 			}
 		}
-		
 
+		// Vector grows about 17 times ~ ceil(log2(100'000))
+		TEST_METHOD(STL_VectorGrowth)
+		{
+			std::vector<int, STLcustomalloc<int> > v;
+
+			for (int i = 0; i < 100'000; i++)
+				v.push_back(i);
+
+			for (int i = 0; i < 100'000; i++)
+				Assert::AreEqual(v[i], i);
+		}
 	};
 }
