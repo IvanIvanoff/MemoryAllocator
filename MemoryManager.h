@@ -27,7 +27,7 @@ class MemoryManager
 public:
 	MemoryManager(int64_t = 4 * 1024);				//!< Creates new manager with the given size in megabytes
 	~MemoryManager();									//!< Destroys and frees the memory
-	MemoryManager(const MemoryManager&) = delete;	//!< Cannot use copy constructor
+	MemoryManager(const MemoryManager&);	//!< Cannot use copy constructor
 	MemoryManager(MemoryManager&&) = delete;		//!< Cannot use move constructor
 	void operator=(const MemoryManager&) = delete;	//!< Cannot use copy asignment operator
 	void operator=(MemoryManager&&) = delete;			//!< Cannot use move assignment operator

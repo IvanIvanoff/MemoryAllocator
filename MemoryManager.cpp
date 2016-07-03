@@ -64,6 +64,14 @@ MemoryManager::MemoryManager(int64_t size)
 	flist_->size = 0;
 }
 
+MemoryManager::MemoryManager(const MemoryManager& other)
+{
+	heap_ = other.heap_;
+	heap_end_ = other.heap_end_;
+	flist_ = other.flist_;
+	current_free_ = other.current_free_;
+}
+
 /*	The destructor of the Memory manager
  *	Frees all the memory
  */
@@ -71,8 +79,10 @@ MemoryManager::~MemoryManager()
 {
 	//Do not have to delete anything else
 	//Only heap_ has been allocated with operator new and thus needs to be freed
-	if (heap_)
-		delete[] heap_;
+	if (heap_) {
+//		delete[] heap_;
+//		heap_ = nullptr;
+	}
 }
 
 /*	Allocates on the heap size bytes of memory and returns pointer to them
