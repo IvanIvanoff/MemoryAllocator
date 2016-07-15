@@ -95,7 +95,7 @@ MemoryManager::~MemoryManager()
 char* MemoryManager::malloc(size_t size, thrw throwing)
 {
 	if (size <= 0) {
-		if(throwing == NO_THROW)return nullptr;
+		if(throwing == NO_THROW) return nullptr;
 		else throw std::bad_alloc();
 	}
 

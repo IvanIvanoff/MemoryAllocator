@@ -42,7 +42,7 @@ bool operator!=(const STLcustomalloc<T>&, const STLcustomalloc<U>&);
 
 
 template<class T, class U>
-inline bool operator==(const STLcustomalloc<T>&, const STLcustomalloc<U>&)
+inline bool operator==(const STLcustomalloc<T>& lhs, const STLcustomalloc<U>& rhs)
 {
 	return false;
 }
